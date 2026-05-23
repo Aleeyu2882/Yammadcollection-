@@ -281,7 +281,7 @@ function handleSheet(data) {
       cat:      r[2] ? String(r[2].v) : "",
       badge:    r[3] ? String(r[3].v) : "",
       featured: featured,
-      img:      r[5] ? String(r[5].v) : ""
+      img:      r[5] ? fixImg(String(r[5].v)) : ""
     });
   }
   if (products.length === 0) {
@@ -406,6 +406,17 @@ function checkout() {
   window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank");
 }
 
+function fixImg(url) {
+  if (!url) return "";
+  // Convert ibb.co viewer link to direct image link
+  // https://ibb.co/KzXW77Wp -> https://i.ibb.co/KzXW77Wp/img.jpg
+  if (url.indexOf("ibb.co") !== -1 && url.indexOf("//i.ibb.co") === -1) {
+    var parts = url.split("/");
+    var code = parts[parts.length - 1];
+    return "https://i.ibb.co/" + code + "/img.jpg";
+  }
+  return url;
+}
 function fmt(n){return Number(n).toLocaleString();}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
